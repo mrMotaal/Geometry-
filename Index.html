@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry & Scale Drawings Revision - Mr Ahmed Abd E Motaal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.95);
+            --text-main: #0c4a6e;
+            --text-muted: #0284c7;
+            --btn-bg: #38bdf8;
+            --btn-shadow: #0284c7;
+            --btn-hover: #7dd3fc;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .btn-toggle, .solution-box { display: none !important; }
+            .question-card { break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; margin-bottom: 20px; background: white; }
+            .student-workspace { display: flex !important; }
+            header { box-shadow: none; border: 2px solid #0284c7; margin-bottom: 1.5rem; }
+            .teacher-badge { border: 1px solid #0284c7; background: #f0f9ff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 1.8rem 3rem;
+            border-radius: 30px;
+            border: 2px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.1), inset 0 2px 10px rgba(255,255,255,1);
+            width: 100%;
+            max-width: 840px;
+        }
+        header h1 { margin: 0 0 0.8rem 0; font-size: 2.2rem; font-weight: 800; color: var(--text-main); }
+        .teacher-badge {
+            display: inline-flex; align-items: center; justify-content: center; gap: 1.2rem;
+            background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 100%);
+            border: 2px solid #7dd3fc; padding: 0.5rem 1.8rem; border-radius: 999px;
+            font-size: 1.25rem; font-weight: 800; color: #0369a1; margin-bottom: 0.5rem; flex-wrap: wrap;
+        }
+        .teacher-badge .divider { color: #38bdf8; font-weight: 900; }
+        .teacher-phone { color: #0284c7; letter-spacing: 0.5px; }
+        .student-info {
+            display: flex; justify-content: space-between; gap: 2rem; margin-top: 1.2rem;
+            padding-top: 1rem; border-top: 2px dashed #bae6fd; font-weight: 700; font-size: 1.15rem;
+        }
+        .info-field { flex: 1; text-align: left; display: flex; align-items: center; gap: 10px; }
+        .info-line { flex: 1; border-bottom: 2px dotted #0284c7; height: 1.2rem; }
+        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 1.5rem; }
+        .section-title {
+            font-size: 1.75rem; font-weight: 800; color: #0369a1; margin-top: 2rem; margin-bottom: 0.5rem;
+            padding-left: 1rem; border-left: 6px solid var(--btn-bg); border-radius: 4px;
+        }
+        .question-card {
+            background: var(--card-bg); backdrop-filter: blur(16px); border: 2px solid var(--card-border);
+            border-radius: 24px; padding: 2.2rem 2rem 1.8rem 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05), inset 0 2px 8px rgba(255,255,255,0.8); position: relative;
+        }
+        .q-number {
+            position: absolute; top: -15px; left: -15px; background: var(--btn-bg); color: white;
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.1rem; border-radius: 50%; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        }
+        .question-text { font-size: 1.3rem; font-weight: 700; line-height: 1.6; margin-bottom: 1rem; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 1rem 0 1.5rem 0; }
+        @media(min-width: 600px) {
+            .options-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .option-item {
+            background: rgba(240, 249, 255, 0.9); border: 2px solid #bae6fd; border-radius: 14px;
+            padding: 12px 18px; font-size: 1.15rem; font-weight: 700; color: #0369a1; display: flex; align-items: flex-start; gap: 10px;
+            line-height: 1.5; word-break: break-word;
+        }
+        .sub-questions { display: flex; flex-direction: column; gap: 10px; margin: 1rem 0; padding-left: 1rem; font-size: 1.2rem; font-weight: 700; }
+        .figure-box {
+            margin: 1rem 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
+            gap: 1.5rem; background: rgba(255, 255, 255, 0.9); padding: 1rem; border-radius: 16px; border: 1px solid #e0f2fe;
+        }
+        .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 1.15rem; text-align: center; background: white; border-radius: 12px; overflow: hidden; }
+        .data-table th, .data-table td { border: 2px solid #bae6fd; padding: 10px; font-weight: 700; }
+        .data-table th { background: #e0f2fe; color: #0369a1; }
+        .student-workspace { margin: 1.8rem 0 1.2rem 0; display: flex; flex-direction: column; gap: 1.8rem; }
+        .writing-line { width: 100%; height: 1px; border-bottom: 2px dashed #93c5fd; }
+        .btn-toggle {
+            background: var(--btn-bg); color: white; border: none; padding: 10px 24px; font-size: 1.05rem;
+            font-weight: 800; font-family: inherit; border-radius: 16px; cursor: pointer;
+            box-shadow: 0 5px 0 var(--btn-shadow); transition: all 0.1s ease; outline: none; margin-top: 0.5rem;
+        }
+        .btn-toggle:active { transform: translateY(5px); box-shadow: 0 0px 0 var(--btn-shadow); }
+        .btn-toggle:hover { background: var(--btn-hover); }
+        .solution-box {
+            margin-top: 1.2rem; padding: 1.2rem; background: rgba(240, 249, 255, 0.95);
+            border-radius: 16px; border: 2px dashed #38bdf8; font-size: 1.15rem; font-weight: 700; color: #0369a1; display: none;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Angle Relationships, Triangles & Scale Drawings</h1>
+        <div class="teacher-badge">
+            <span>Mr Ahmed Abd E Motaal</span>
+            <span class="divider">|</span>
+            <span class="teacher-phone">01019775590</span>
+        </div>
+        <div class="student-info">
+            <div class="info-field"><span>Name:</span><div class="info-line"></div></div>
+            <div class="info-field" style="max-width: 260px;"><span>Date:</span><div class="info-line"></div></div>
+        </div>
+    </header>
+    <div class="container" id="app"></div>
+    <script>
+        const revisionData = [
+            {
+                section: "Lesson 1: Complementary and Supplementary Angles",
+                questions: [
+                    {
+                        q: "<strong>Example 1:</strong> Use the diagram to find the measure of each angle if $m\\angle ABE = 17^\\circ$.<div class='sub-questions'><div>a. $m\\angle EBC$</div><div>b. $m\\angle EBD$</div></div>",
+                        figure: `<div class="figure-box">
+                            <svg width="320" height="150" viewBox="0 0 320 150">
+                                <line x1="30" y1="120" x2="290" y2="120" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="170" y1="120" x2="170" y2="25" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="170" y1="120" x2="50" y2="65" stroke="#0284c7" stroke-width="2.5"/>
+                                <rect x="156" y="106" width="14" height="14" fill="none" stroke="#0c4a6e" stroke-width="1.8"/>
+                                <circle cx="65" cy="120" r="3" fill="#0c4a6e"/>
+                                <text x="60" y="140" font-weight="bold" fill="#0c4a6e">A</text>
+                                <text x="165" y="140" font-weight="bold" fill="#0c4a6e">B</text>
+                                <circle cx="265" cy="120" r="3" fill="#0c4a6e"/>
+                                <text x="260" y="140" font-weight="bold" fill="#0c4a6e">C</text>
+                                <circle cx="170" cy="45" r="3" fill="#0c4a6e"/>
+                                <text x="180" y="50" font-weight="bold" fill="#0c4a6e">D</text>
+                                <circle cx="95" cy="86" r="3" fill="#0284c7"/>
+                                <text x="95" y="76" font-weight="bold" fill="#0284c7">E</text>
+                            </svg>
+                        </div>`,
+                        a: "<strong>a.</strong> $\\angle EBC$ and $\\angle ABE$ are a linear pair, so they are supplementary angles:<br>$$m\\angle EBC + m\\angle ABE = 180^\\circ \\implies m\\angle EBC + 17^\\circ = 180^\\circ \\implies m\\angle EBC = 163^\\circ$$<strong>b.</strong> $\\angle EBD$ and $\\angle ABE$ form a right angle, so they are complementary angles:<br>$$m\\angle EBD + m\\angle ABE = 90^\\circ \\implies m\\angle EBD + 17^\\circ = 90^\\circ \\implies m\\angle EBD = 73^\\circ$$"
+                    },
+                    {
+                        q: "<strong>Example 2:</strong> Use the diagram from Example 1 to find $m\\angle ABE$ and $m\\angle EBD$ if $m\\angle ABE = (x - 7)^\\circ$ and $m\\angle EBD = (4x - 3)^\\circ$.",
+                        a: "$$m\\angle EBD + m\\angle ABE = 90^\\circ$$ $$(4x - 3) + (x - 7) = 90 \\implies 5x - 10 = 90 \\implies 5x = 100 \\implies x = 20$$ Substitute $x = 20$: <br>• $m\\angle ABE = (20 - 7)^\\circ = 13^\\circ$<br>• $m\\angle EBD = (4(20) - 3)^\\circ = 77^\\circ$"
+                    },
+                    {
+                        q: "Find the measure of the complement of the angle: $8^\\circ$",
+                        a: "$$90^\\circ - 8^\\circ = 82^\\circ$$"
+                    },
+                    {
+                        q: "Find the measure of the complement of the angle: $77^\\circ$",
+                        a: "$$90^\\circ - 77^\\circ = 13^\\circ$$"
+                    },
+                    {
+                        q: "Find the measure of the complement of the angle: $44^\\circ$",
+                        a: "$$90^\\circ - 44^\\circ = 46^\\circ$$"
+                    },
+                    {
+                        q: "Find the value of the variable $w$ in the diagram below.",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="130" viewBox="0 0 280 130">
+                                <line x1="30" y1="35" x2="250" y2="95" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="30" y1="95" x2="250" y2="35" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="85" y="70" font-weight="bold" fill="#0284c7">w°</text>
+                                <text x="175" y="70" font-weight="bold" fill="#0c4a6e">35°</text>
+                            </svg>
+                        </div>`,
+                        a: "Vertical angles are congruent:<br>$$w = 35$$"
+                    },
+                    {
+                        q: "Find the value of the variable $x$ in the diagram below.",
+                        figure: `<div class="figure-box">
+                            <svg width="300" height="150" viewBox="0 0 300 150">
+                                <line x1="30" y1="110" x2="270" y2="125" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="160" y1="118" x2="160" y2="25" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="160" y1="118" x2="45" y2="75" stroke="#0284c7" stroke-width="2.5"/>
+                                <rect x="160" y="105" width="13" height="13" fill="none" stroke="#0c4a6e" stroke-width="1.8"/>
+                                <text x="45" y="130" font-weight="bold" fill="#0c4a6e">P</text>
+                                <text x="155" y="140" font-weight="bold" fill="#0c4a6e">Q</text>
+                                <text x="255" y="145" font-weight="bold" fill="#0c4a6e">R</text>
+                                <text x="168" y="40" font-weight="bold" fill="#0c4a6e">S</text>
+                                <text x="55" y="70" font-weight="bold" fill="#0284c7">T</text>
+                                <text x="95" y="110" font-weight="bold" fill="#0c4a6e">19°</text>
+                                <text x="138" y="95" font-weight="bold" fill="#0284c7">x°</text>
+                            </svg>
+                        </div>`,
+                        a: "$\\angle PQT$ and $\\angle TQS$ are complementary angles because $\\angle PQS = 90^\\circ$:<br>$$x + 19 = 90 \\implies x = 90 - 19 = 71$$"
+                    },
+                    {
+                        q: "Find the value of the variable $y$ in the diagram below.",
+                        figure: `<div class="figure-box">
+                            <svg width="300" height="140" viewBox="0 0 300 140">
+                                <line x1="30" y1="115" x2="270" y2="115" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="150" y1="115" x2="225" y2="35" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="45" y="135" font-weight="bold" fill="#0c4a6e">A</text>
+                                <text x="145" y="135" font-weight="bold" fill="#0c4a6e">B</text>
+                                <text x="250" y="135" font-weight="bold" fill="#0c4a6e">C</text>
+                                <text x="205" y="35" font-weight="bold" fill="#0284c7">D</text>
+                                <text x="110" y="105" font-weight="bold" fill="#0c4a6e">135°</text>
+                                <text x="168" y="108" font-weight="bold" fill="#0284c7">(3y)°</text>
+                            </svg>
+                        </div>`,
+                        a: "$\\angle ABD$ and $\\angle DBC$ form a linear pair (supplementary):<br>$$135 + 3y = 180 \\implies 3y = 45 \\implies y = 15$$"
+                    },
+                    {
+                        q: "Find the values of the variables $a$ and $b$ in the diagram below.",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="140" viewBox="0 0 280 140">
+                                <line x1="40" y1="25" x2="240" y2="120" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="40" y1="120" x2="240" y2="25" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="128" y="52" font-weight="bold" fill="#0284c7">(2a)°</text>
+                                <text x="95" y="78" font-weight="bold" fill="#0284c7">b°</text>
+                                <text x="125" y="105" font-weight="bold" fill="#0c4a6e">118°</text>
+                            </svg>
+                        </div>`,
+                        a: "• Vertical angles are congruent: $$2a = 118 \\implies a = 59$$<br>• Linear pair angles are supplementary: $$b + 118 = 180 \\implies b = 62$$"
+                    },
+                    {
+                        q: "What is the measure of the supplement of an angle that measures $79^\\circ$?",
+                        options: ["A. $11^\\circ$", "B. $21^\\circ$", "C. $101^\\circ$", "D. $121^\\circ$"],
+                        a: "$$180^\\circ - 79^\\circ = 101^\\circ$$<strong>Correct Answer: C. $101^\\circ$</strong>"
+                    },
+                    {
+                        q: "In the diagram below, if $m\\angle JED = 57^\\circ$, find $m\\angle HEK$.",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="180" viewBox="0 0 280 180">
+                                <line x1="30" y1="90" x2="250" y2="105" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="145" y1="15" x2="135" y2="165" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="95" y1="25" x2="185" y2="165" stroke="#0284c7" stroke-width="2.5"/>
+                                <rect x="141" y="83" width="12" height="12" fill="none" stroke="#0c4a6e" stroke-width="1.6"/>
+                                <text x="40" y="110" font-weight="bold" fill="#0c4a6e">D</text>
+                                <text x="122" y="112" font-weight="bold" fill="#0c4a6e">E</text>
+                                <text x="235" y="122" font-weight="bold" fill="#0c4a6e">F</text>
+                                <text x="152" y="30" font-weight="bold" fill="#0c4a6e">G</text>
+                                <text x="145" y="162" font-weight="bold" fill="#0c4a6e">H</text>
+                                <text x="82" y="42" font-weight="bold" fill="#0284c7">J</text>
+                                <text x="190" y="155" font-weight="bold" fill="#0284c7">K</text>
+                            </svg>
+                        </div>`,
+                        options: ["A. $33^\\circ$", "B. $43^\\circ$", "C. $47^\\circ$", "D. $57^\\circ$"],
+                        a: "From the right angle symbol, $\\angle DEG = 90^\\circ$, so $\\angle DEH = 90^\\circ$.<br>Since $\\angle JED$ and $\\angle FEK$ are vertical angles, $m\\angle FEK = m\\angle JED = 57^\\circ$.<br>Also, $\\angle FEH = 90^\\circ$, so $\\angle HEK$ and $\\angle FEK$ are complementary:<br>$$m\\angle HEK = 90^\\circ - 57^\\circ = 33^\\circ$$<strong>Correct Answer: A. $33^\\circ$</strong>"
+                    },
+                    {
+                        q: "In the diagram from Question 12, if $m\\angle FEK = (3x + 1)^\\circ$ and $m\\angle DEK = (6x - 10)^\\circ$, find $m\\angle DEK$.",
+                        options: ["A. $21^\\circ$", "B. $64^\\circ$", "C. $111^\\circ$", "D. $116^\\circ$"],
+                        a: "$\\angle FEK$ and $\\angle DEK$ form a linear pair along line $DF$, so they are supplementary:<br>$$(3x + 1) + (6x - 10) = 180 \\implies 9x - 9 = 180 \\implies 9x = 189 \\implies x = 21$$Substitute $x = 21$ into $m\\angle DEK$:<br>$$m\\angle DEK = 6(21) - 10 = 126 - 10 = 116^\\circ$$<strong>Correct Answer: D. $116^\\circ$</strong>"
+                    },
+                    {
+                        q: "If $m\\angle DBE = (3x)^\\circ$ and $m\\angle CBF = (19x - 6)^\\circ$, find $m\\angle ABF$. Explain your answer.",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="170" viewBox="0 0 280 170">
+                                <line x1="30" y1="100" x2="250" y2="100" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="140" y1="100" x2="140" y2="20" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="105" y1="160" x2="175" y2="30" stroke="#0284c7" stroke-width="2.5"/>
+                                <rect x="127" y="87" width="13" height="13" fill="none" stroke="#0c4a6e" stroke-width="1.8"/>
+                                <text x="40" y="120" font-weight="bold" fill="#0c4a6e">A</text>
+                                <text x="145" y="118" font-weight="bold" fill="#0c4a6e">B</text>
+                                <text x="235" y="120" font-weight="bold" fill="#0c4a6e">C</text>
+                                <text x="125" y="30" font-weight="bold" fill="#0c4a6e">D</text>
+                                <text x="182" y="42" font-weight="bold" fill="#0284c7">E</text>
+                                <text x="115" y="158" font-weight="bold" fill="#0284c7">F</text>
+                            </svg>
+                        </div>`,
+                        a: "$\\angle ABE$ and $\\angle CBF$ are vertical angles, so $m\\angle ABE = m\\angle CBF$.<br>Since $m\\angle ABD = 90^\\circ$, we have $m\\angle ABE = 90^\\circ + m\\angle DBE = 90 + 3x$.<br>$$90 + 3x = 19x - 6 \\implies 16x = 96 \\implies x = 6$$Then $m\\angle CBF = 19(6) - 6 = 108^\\circ$.<br>Since $\\angle ABF$ and $\\angle CBF$ form a linear pair:<br>$$m\\angle ABF = 180^\\circ - 108^\\circ = 72^\\circ$$"
+                    }
+                ]
+            },
+            {
+                section: "Lesson 2: Angle Relationships and Transversals",
+                questions: [
+                    {
+                        q: "<strong>Example 1:</strong> In the diagram of parallel lines cut by a transversal below, if $m\\angle 1 = 59^\\circ$, find $m\\angle 7$.",
+                        figure: `<div class="figure-box">
+                            <svg width="320" height="170" viewBox="0 0 320 170">
+                                <line x1="40" y1="55" x2="280" y2="65" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="40" y1="115" x2="280" y2="125" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="90" y1="15" x2="230" y2="160" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="102" y="50" font-weight="bold" fill="#0c4a6e">1</text>
+                                <text x="135" y="50" font-weight="bold" fill="#0c4a6e">2</text>
+                                <text x="120" y="75" font-weight="bold" fill="#0c4a6e">3</text>
+                                <text x="152" y="75" font-weight="bold" fill="#0c4a6e">4</text>
+                                <text x="162" y="112" font-weight="bold" fill="#0c4a6e">5</text>
+                                <text x="195" y="112" font-weight="bold" fill="#0c4a6e">7</text>
+                                <text x="178" y="138" font-weight="bold" fill="#0c4a6e">6</text>
+                                <text x="210" y="138" font-weight="bold" fill="#0c4a6e">8</text>
+                            </svg>
+                        </div>`,
+                        a: "• $\\angle 1 \\cong \\angle 5$ (Corresponding angles are congruent), so $m\\angle 5 = m\\angle 1 = 59^\\circ$.<br>• $\\angle 5$ and $\\angle 7$ form a linear pair, so they are supplementary:<br>$$m\\angle 5 + m\\angle 7 = 180^\\circ \\implies 59^\\circ + m\\angle 7 = 180^\\circ \\implies m\\angle 7 = 121^\\circ$$"
+                    },
+                    {
+                        q: "<strong>Example 2:</strong> Using the diagram from Example 1, show that $\\angle 2$ is supplementary to $\\angle 8$.",
+                        a: "1. $\\angle 2$ and $\\angle 4$ are supplementary (Angles that form a line are supplementary: $m\\angle 2 + m\\angle 4 = 180^\\circ$).<br>2. $\\angle 4 \\cong \\angle 8$ (Corresponding angles are congruent: $m\\angle 4 = m\\angle 8$).<br>3. By substitution, $m\\angle 2 + m\\angle 8 = 180^\\circ$, so $\\angle 2$ and $\\angle 8$ are supplementary."
+                    },
+                    {
+                        q: "Use the diagram of parallel lines below to find each angle measure:<div class='sub-questions'><div>7. $m\\angle 1$</div><div>8. $m\\angle 2$</div><div>9. $m\\angle 3$</div><div>10. $m\\angle 4$</div></div>",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="170" viewBox="0 0 280 170">
+                                <line x1="40" y1="45" x2="240" y2="45" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="40" y1="115" x2="240" y2="115" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="130" y1="10" x2="160" y2="160" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="122" y="38" font-weight="bold" fill="#0c4a6e">1</text>
+                                <text x="126" y="62" font-weight="bold" fill="#0c4a6e">3</text>
+                                <text x="148" y="62" font-weight="bold" fill="#0c4a6e">2</text>
+                                <text x="156" y="108" font-weight="bold" fill="#0c4a6e">84°</text>
+                                <text x="160" y="135" font-weight="bold" fill="#0c4a6e">4</text>
+                            </svg>
+                        </div>`,
+                        a: "• <strong>7.</strong> $m\\angle 1 = 180^\\circ - 84^\\circ = 96^\\circ$ (Alternate exterior to the supplement of $84^\\circ$, or vertical to $\\angle 2$).<br>• <strong>8.</strong> $m\\angle 2 = 180^\\circ - 84^\\circ = 96^\\circ$ (Same-side interior angles with $84^\\circ$ are supplementary).<br>• <strong>9.</strong> $m\\angle 3 = 84^\\circ$ (Alternate interior angles with $84^\\circ$ are congruent).<br>• <strong>10.</strong> $m\\angle 4 = 180^\\circ - 84^\\circ = 96^\\circ$ (Linear pair with $84^\\circ$, or corresponding to $\\angle 2$)."
+                    },
+                    {
+                        q: "Which statement must be true?",
+                        options: [
+                            "A. Corresponding angles are congruent.",
+                            "B. A transversal intersects two parallel lines.",
+                            "C. Same-side interior angles between parallel lines are supplementary.",
+                            "D. Alternate exterior angles outside parallel lines are supplementary."
+                        ],
+                        a: "<strong>Correct Answer: C. Same-side interior angles between parallel lines are supplementary.</strong><br><br><strong>Explanation of incorrect choices:</strong><br>• <strong>A (Corresponding angles are congruent):</strong> Only true when the lines intersected by the transversal are parallel, not as a general universal statement for any intersecting lines.<br>• <strong>B (A transversal intersects two parallel lines):</strong> This is a conditional premise/setup rather than a required geometric property or theorem about angle measures.<br>• <strong>D (Alternate exterior angles outside parallel lines are supplementary):</strong> Incorrect because alternate exterior angles between parallel lines are actually <em>congruent</em> (equal in measure), not supplementary."
+                    },
+                    {
+                        q: "In the diagram below, which condition makes line $h$ parallel to line $g$?",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="170" viewBox="0 0 280 170">
+                                <line x1="40" y1="60" x2="240" y2="50" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="40" y1="130" x2="240" y2="120" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="90" y1="15" x2="200" y2="160" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="25" y="65" font-weight="bold" fill="#0c4a6e">h</text>
+                                <text x="25" y="135" font-weight="bold" fill="#0c4a6e">g</text>
+                                <text x="80" y="15" font-weight="bold" fill="#0284c7">k</text>
+                                <text x="98" y="52" font-weight="bold" fill="#0c4a6e">1</text>
+                                <text x="112" y="75" font-weight="bold" fill="#0c4a6e">2</text>
+                                <text x="135" y="72" font-weight="bold" fill="#0c4a6e">3</text>
+                                <text x="165" y="142" font-weight="bold" fill="#0c4a6e">4</text>
+                            </svg>
+                        </div>`,
+                        options: [
+                            "A. $\\angle 2$ and $\\angle 4$ are suppleme...",
+                            "B. $\\angle 1$ and $\\angle 4$ are congruen...",
+                            "C. $\\angle 2$ and $\\angle 4$ are congruent.",
+                            "D. $\\angle 2$ and $\\angle 3$ are supplementary."
+                        ],
+                        a: "$\\angle 2$ and $\\angle 4$ are corresponding angles. When corresponding angles are congruent, the lines $h$ and $g$ are parallel.<br><strong>Correct Answer: C. $\\angle 2$ and $\\angle 4$ are congruent.</strong>"
+                    },
+                    {
+                        q: "Use the diagram from the previous problem. Assume that lines $g$ and $h$ are parallel. Let $m\\angle 1 = 9y$, $m\\angle 2 = 3x$, and $m\\angle 4 = 132 - x$. Find the values of $x$ and $y$. Show your work.",
+                        a: "• Since $g \\parallel h$, corresponding angles $\\angle 2$ and $\\angle 4$ are congruent:<br>$$3x = 132 - x \\implies 4x = 132 \\implies x = 33$$• Substitute $x = 33$ to find $m\\angle 2$: $m\\angle 2 = 3(33) = 99^\\circ$.<br>• $\\angle 1$ and $\\angle 2$ form a linear pair (supplementary):<br>$$m\\angle 1 + 99^\\circ = 180^\\circ \\implies m\\angle 1 = 81^\\circ$$$$9y = 81 \\implies y = 9$$"
+                    },
+                    {
+                        q: "Alexa says that if a transversal is perpendicular to one of two parallel lines, then it must be perpendicular to both lines. Is this correct? Explain.",
+                        a: "<strong>Yes, Alexa is correct.</strong> If a transversal is perpendicular to the first parallel line, the angle of intersection is $90^\\circ$. By the Corresponding Angles Postulate, the corresponding angle at the second parallel line is congruent to the first angle, so it also measures $90^\\circ$. Therefore, the transversal is perpendicular to both lines."
+                    },
+                    {
+                        q: "A pair of parallel lines is intersected by two transversals as shown. Both transversals intersect one line at the same point, forming a $128^\\circ$ obtuse angle and right/acute angles. Explain how to find the supplementary angle measure to $128^\\circ$.",
+                        a: "Angles that form a linear pair along the parallel line are supplementary:<br>$$180^\\circ - 128^\\circ = 52^\\circ$$"
+                    }
+                ]
+            },
+            {
+                section: "Lesson 3: Angle Relationships with Triangles",
+                questions: [
+                    {
+                        q: "<strong>Example 1:</strong> Find $m\\angle Y$ in $\\triangle XYZ$ where $m\\angle X = 73^\\circ$ and $m\\angle Z = 46^\\circ$.",
+                        figure: `<div class="figure-box">
+                            <svg width="260" height="150" viewBox="0 0 260 150">
+                                <polygon points="120,20 45,110 220,135" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="115" y="15" font-weight="bold" fill="#0c4a6e">X</text>
+                                <text x="30" y="115" font-weight="bold" fill="#0c4a6e">Y</text>
+                                <text x="228" y="142" font-weight="bold" fill="#0c4a6e">Z</text>
+                                <text x="108" y="48" font-weight="bold" fill="#0c4a6e">73°</text>
+                                <text x="182" y="125" font-weight="bold" fill="#0c4a6e">46°</text>
+                            </svg>
+                        </div>`,
+                        a: "The sum of the angle measures of a triangle is $180^\\circ$:<br>$$m\\angle X + m\\angle Y + m\\angle Z = 180^\\circ$$$$73^\\circ + m\\angle Y + 46^\\circ = 180^\\circ \\implies m\\angle Y + 119^\\circ = 180^\\circ \\implies m\\angle Y = 61^\\circ$$"
+                    },
+                    {
+                        q: "<strong>Example 2:</strong> Find the values of $x$ and $y$ in the triangle below.",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="130" viewBox="0 0 280 130">
+                                <polygon points="130,30 40,105 185,105" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="185" y1="105" x2="255" y2="105" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="118" y="55" font-weight="bold" fill="#0c4a6e">80°</text>
+                                <text x="68" y="98" font-weight="bold" fill="#0284c7">x°</text>
+                                <text x="150" y="98" font-weight="bold" fill="#0c4a6e">66°</text>
+                                <text x="195" y="98" font-weight="bold" fill="#0284c7">y°</text>
+                            </svg>
+                        </div>`,
+                        a: "• The angles $66^\\circ$ and $y^\\circ$ form a linear pair:<br>$$y + 66^\\circ = 180^\\circ \\implies y = 114^\\circ$$• The sum of the angle measures of a triangle is $180^\\circ$:<br>$$x + 80^\\circ + 66^\\circ = 180^\\circ \\implies x + 146^\\circ = 180^\\circ \\implies x = 34^\\circ$$"
+                    },
+                    {
+                        q: "Find the missing angle measure $m\\angle C$ for $\\triangle ABC$ if $m\\angle A = 57^\\circ$ and $m\\angle B = 12^\\circ$.",
+                        a: "$$m\\angle C = 180^\\circ - (57^\\circ + 12^\\circ) = 180^\\circ - 69^\\circ = 111^\\circ$$"
+                    },
+                    {
+                        q: "Find the missing angle measure $m\\angle E$ for $\\triangle DEF$ if $m\\angle D = 95^\\circ$ and $m\\angle F = 32^\\circ$.",
+                        a: "$$m\\angle E = 180^\\circ - (95^\\circ + 32^\\circ) = 180^\\circ - 127^\\circ = 53^\\circ$$"
+                    },
+                    {
+                        q: "Find the missing angle measure $m\\angle J$ for $\\triangle JKL$ if $m\\angle K = 48^\\circ$ and $m\\angle L = 61^\\circ$.",
+                        a: "$$m\\angle J = 180^\\circ - (48^\\circ + 61^\\circ) = 180^\\circ - 109^\\circ = 71^\\circ$$"
+                    },
+                    {
+                        q: "Find $m\\angle C$ in the right triangle $\\triangle ABC$ below.",
+                        figure: `<div class="figure-box">
+                            <svg width="260" height="130" viewBox="0 0 260 130">
+                                <polygon points="45,35 45,105 225,105" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <rect x="45" y="91" width="14" height="14" fill="none" stroke="#0c4a6e" stroke-width="1.8"/>
+                                <text x="35" y="122" font-weight="bold" fill="#0c4a6e">A</text>
+                                <text x="38" y="28" font-weight="bold" fill="#0c4a6e">B</text>
+                                <text x="228" y="122" font-weight="bold" fill="#0c4a6e">C</text>
+                                <text x="50" y="68" font-weight="bold" fill="#0c4a6e">75°</text>
+                            </svg>
+                        </div>`,
+                        a: "$$m\\angle C = 90^\\circ - 75^\\circ = 15^\\circ$$"
+                    },
+                    {
+                        q: "Find $m\\angle F$ in $\\triangle DEF$ below.",
+                        figure: `<div class="figure-box">
+                            <svg width="260" height="130" viewBox="0 0 260 130">
+                                <polygon points="130,25 40,105 220,105" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="28" y="122" font-weight="bold" fill="#0c4a6e">D</text>
+                                <text x="222" y="122" font-weight="bold" fill="#0c4a6e">E</text>
+                                <text x="125" y="18" font-weight="bold" fill="#0c4a6e">F</text>
+                                <text x="65" y="98" font-weight="bold" fill="#0c4a6e">40°</text>
+                                <text x="172" y="98" font-weight="bold" fill="#0c4a6e">45°</text>
+                            </svg>
+                        </div>`,
+                        a: "$$m\\angle F = 180^\\circ - (40^\\circ + 45^\\circ) = 180^\\circ - 85^\\circ = 95^\\circ$$"
+                    },
+                    {
+                        q: "Find $m\\angle J$ in $\\triangle JKL$ where $m\\angle L = 41^\\circ$ and $m\\angle K = 63^\\circ$.",
+                        a: "$$m\\angle J = 180^\\circ - (63^\\circ + 41^\\circ) = 180^\\circ - 104^\\circ = 76^\\circ$$"
+                    },
+                    {
+                        q: "Find $m\\angle T$ in the isosceles triangle $\\triangle RST$ below where $TS = TR$ and $m\\angle S = 37^\\circ$.",
+                        figure: `<div class="figure-box">
+                            <svg width="260" height="130" viewBox="0 0 260 130">
+                                <polygon points="130,30 35,105 225,105" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="78" y1="62" x2="86" y2="72" stroke="#0284c7" stroke-width="2.5"/>
+                                <line x1="182" y1="62" x2="174" y2="72" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="22" y="122" font-weight="bold" fill="#0c4a6e">S</text>
+                                <text x="228" y="122" font-weight="bold" fill="#0c4a6e">R</text>
+                                <text x="125" y="22" font-weight="bold" fill="#0c4a6e">T</text>
+                                <text x="62" y="98" font-weight="bold" fill="#0c4a6e">37°</text>
+                            </svg>
+                        </div>`,
+                        a: "Since $TS = TR$, the base angles are congruent ($m\\angle R = m\\angle S = 37^\\circ$):<br>$$m\\angle T = 180^\\circ - (37^\\circ + 37^\\circ) = 180^\\circ - 74^\\circ = 106^\\circ$$"
+                    },
+                    {
+                        q: "Find $m\\angle B$ in the triangle below using the Exterior Angle Theorem.",
+                        figure: `<div class="figure-box">
+                            <svg width="290" height="130" viewBox="0 0 290 130">
+                                <polygon points="60,30 40,100 165,95" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="165" y1="95" x2="265" y2="91" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="55" y="22" font-weight="bold" fill="#0c4a6e">A</text>
+                                <text x="28" y="115" font-weight="bold" fill="#0c4a6e">B</text>
+                                <text x="160" y="115" font-weight="bold" fill="#0c4a6e">C</text>
+                                <text x="255" y="110" font-weight="bold" fill="#0c4a6e">D</text>
+                                <text x="58" y="58" font-weight="bold" fill="#0c4a6e">79°</text>
+                                <text x="168" y="85" font-weight="bold" fill="#0284c7">153°</text>
+                            </svg>
+                        </div>`,
+                        a: "By the Exterior Angle Theorem, $m\\angle ACD = m\\angle A + m\\angle B$:<br>$$153^\\circ = 79^\\circ + m\\angle B \\implies m\\angle B = 153^\\circ - 79^\\circ = 74^\\circ$$"
+                    },
+                    {
+                        q: "Find $m\\angle RST$ in the isosceles triangle below where the exterior angle at $T$ is $88^\\circ$ and $TS = TR$.",
+                        figure: `<div class="figure-box">
+                            <svg width="260" height="140" viewBox="0 0 260 140">
+                                <polygon points="130,50 60,115 215,120" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="130" y1="50" x2="80" y2="12" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="90" y1="78" x2="100" y2="86" stroke="#0284c7" stroke-width="2.5"/>
+                                <line x1="178" y1="80" x2="168" y2="88" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="138" y="48" font-weight="bold" fill="#0c4a6e">T</text>
+                                <text x="45" y="130" font-weight="bold" fill="#0c4a6e">S</text>
+                                <text x="220" y="132" font-weight="bold" fill="#0c4a6e">R</text>
+                                <text x="95" y="48" font-weight="bold" fill="#0284c7">88°</text>
+                            </svg>
+                        </div>`,
+                        a: "The exterior angle $88^\\circ$ equals the sum of the two remote congruent interior angles $\\angle S$ and $\\angle R$:<br>$$2 \\cdot m\\angle RST = 88^\\circ \\implies m\\angle RST = 44^\\circ$$"
+                    },
+                    {
+                        q: "What is the value of $x$ in the diagram below?",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="140" viewBox="0 0 280 140">
+                                <polygon points="40,25 40,95 160,95" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="160" y1="95" x2="250" y2="95" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="160" y1="95" x2="235" y2="135" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <rect x="40" y="81" width="14" height="14" fill="none" stroke="#0c4a6e" stroke-width="1.8"/>
+                                <text x="46" y="52" font-weight="bold" fill="#0284c7">(3x)°</text>
+                                <text x="182" y="112" font-weight="bold" fill="#0284c7">(2x)°</text>
+                            </svg>
+                        </div>`,
+                        options: ["A. $18^\\circ$", "B. $36^\\circ$", "C. $54^\\circ$", "D. $72^\\circ$"],
+                        a: "The angle $(2x)^\\circ$ is vertical to the second acute angle of the right triangle, so the two acute angles of the right triangle are $(3x)^\\circ$ and $(2x)^\\circ$:<br>$$3x + 2x = 90^\\circ \\implies 5x = 90^\\circ \\implies x = 18^\\circ$$<strong>Correct Answer: A. $18^\\circ$</strong>"
+                    },
+                    {
+                        q: "The angles of a triangle measure $(x - 4)$ degrees, $(2x + 1)$ degrees, and $(4x + 8)$ degrees. What is the measure of the smallest angle in the triangle?",
+                        options: ["A. $12^\\circ$", "B. $21^\\circ$", "C. $25^\\circ$", "D. $29^\\circ$"],
+                        a: "$$(x - 4) + (2x + 1) + (4x + 8) = 180$$$$7x + 5 = 180 \\implies 7x = 175 \\implies x = 25$$The three angles are:<br>• $x - 4 = 25 - 4 = 21^\\circ$<br>• $2x + 1 = 2(25) + 1 = 51^\\circ$<br>• $4x + 8 = 4(25) + 8 = 108^\\circ$<br><strong>Correct Answer: B. $21^\\circ$</strong>"
+                    },
+                    {
+                        q: "Andrew says the angles of a triangle are supplementary. Is this correct? Explain.",
+                        a: "<strong>No, Andrew is not correct.</strong> By definition, supplementary angles are a pair of <em>two</em> angles whose measures have a sum of $180^\\circ$, whereas a triangle has <em>three</em> interior angles whose sum is $180^\\circ$."
+                    },
+                    {
+                        q: "The sides of an entrance to a museum form congruent exterior angles with the ground. If those angles each measure $132^\\circ$, what is the measure of the angle formed by the sides at the top of the entrance?",
+                        figure: `<div class="figure-box">
+                            <svg width="280" height="130" viewBox="0 0 280 130">
+                                <line x1="20" y1="105" x2="260" y2="105" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <polygon points="140,25 65,105 215,105" fill="#93c5fd" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <line x1="140" y1="25" x2="140" y2="105" stroke="#0c4a6e" stroke-width="1.8"/>
+                                <text x="30" y="98" font-weight="bold" fill="#0c4a6e">132°</text>
+                                <text x="220" y="98" font-weight="bold" fill="#0c4a6e">132°</text>
+                            </svg>
+                        </div>`,
+                        a: "Each base interior angle is supplementary to its $132^\\circ$ exterior angle:<br>$$180^\\circ - 132^\\circ = 48^\\circ$$The top angle of the triangle is:<br>$$180^\\circ - (48^\\circ + 48^\\circ) = 180^\\circ - 96^\\circ = 84^\\circ$$"
+                    }
+                ]
+            },
+            {
+                section: "Lesson 4: Scale Drawings",
+                questions: [
+                    {
+                        q: "<strong>Example 1:</strong> The length of a bus in a scale drawing is $35\\text{ millimeters}$. Every $1\\text{ millimeter}$ in the drawing of the bus represents $0.4\\text{ meters}$ in the actual object. The scale is $1\\text{ mm} : 0.4\\text{ m}$. What is the actual length of the bus?",
+                        a: "Let $x$ represent the actual length of the bus in meters:<br>$$\\frac{1}{0.4} = \\frac{35}{x} \\implies 1x = 0.4(35) \\implies x = 14\\text{ meters}$$"
+                    },
+                    {
+                        q: "<strong>Example 2:</strong> A scale drawing of a new apartment building uses a scale factor of $\\frac{3}{500}$. The drawing of the first floor of the building is $12\\text{ centimeters}$ wide by $18\\text{ centimeters}$ long. What are the actual dimensions of the first floor of the apartment building?",
+                        a: "• <strong>Actual width ($x$):</strong> $$\\frac{3}{500} = \\frac{12}{x} \\implies 3x = 6000 \\implies x = 2000\\text{ cm} = 20\\text{ m}$$• <strong>Actual length ($y$):</strong> $$\\frac{3}{500} = \\frac{18}{y} \\implies 3y = 9000 \\implies y = 3000\\text{ cm} = 30\\text{ m}$$The actual dimensions are $20\\text{ m}$ wide by $30\\text{ m}$ long."
+                    },
+                    {
+                        q: "In a scale drawing, $1\\text{ inch}$ represents $6\\text{ feet}$. In the drawing, the length of the stage is $2.5\\text{ inches}$. What is the actual length of the stage?",
+                        a: "$$\\frac{1\\text{ in}}{6\\text{ ft}} = \\frac{2.5\\text{ in}}{x\\text{ ft}} \\implies x = 6 \\times 2.5 = 15\\text{ feet}$$"
+                    },
+                    {
+                        q: "In a scale drawing, $1\\text{ centimeter}$ represents $3\\text{ meters}$. In the drawing, the height of a wall is $4.5\\text{ centimeters}$. What is the actual height of the wall?",
+                        a: "$$\\frac{1\\text{ cm}}{3\\text{ m}} = \\frac{4.5\\text{ cm}}{x\\text{ m}} \\implies x = 3 \\times 4.5 = 13.5\\text{ meters}$$"
+                    },
+                    {
+                        q: "The distance between two cities is $35\\text{ km}$. A map that is a scale drawing uses the scale $2\\text{ cm} : 5\\text{ km}$. What is the distance between the two cities on the map?",
+                        a: "$$\\frac{2\\text{ cm}}{5\\text{ km}} = \\frac{x\\text{ cm}}{35\\text{ km}} \\implies 5x = 70 \\implies x = 14\\text{ cm}$$"
+                    },
+                    {
+                        q: "A scale drawing of a new park is a rectangle $20\\text{ centimeters}$ by $25\\text{ centimeters}$. The size of the actual park is $108\\text{ meters}$ by $135\\text{ meters}$. What is the scale of the drawing?",
+                        a: "$$\\frac{25\\text{ cm}}{135\\text{ m}} = \\frac{5\\text{ cm}}{27\\text{ m}} \\quad (\\text{or } 1\\text{ cm} : 5.4\\text{ m})$$"
+                    },
+                    {
+                        q: "What is the scale factor that takes $\\triangle ABC$ to $\\triangle DEF$ on the grid below?",
+                        figure: `<div class="figure-box">
+                            <svg width="260" height="170" viewBox="0 0 260 170">
+                                <defs>
+                                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+                                    </pattern>
+                                </defs>
+                                <rect x="20" y="20" width="220" height="140" fill="url(#grid)" stroke="#94a3b8" stroke-width="1.5"/>
+                                <polygon points="20,160 20,120 80,160" fill="rgba(56,189,248,0.35)" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="24" y="155" font-weight="bold" font-size="12" fill="#0c4a6e">A</text>
+                                <text x="24" y="116" font-weight="bold" font-size="12" fill="#0c4a6e">B</text>
+                                <text x="82" y="156" font-weight="bold" font-size="12" fill="#0c4a6e">C</text>
+                                <polygon points="80,120 80,40 200,120" fill="rgba(2,132,199,0.25)" stroke="#0284c7" stroke-width="2.5"/>
+                                <text x="84" y="116" font-weight="bold" font-size="12" fill="#0284c7">D</text>
+                                <text x="84" y="36" font-weight="bold" font-size="12" fill="#0284c7">E</text>
+                                <text x="204" y="118" font-weight="bold" font-size="12" fill="#0284c7">F</text>
+                            </svg>
+                        </div>`,
+                        a: "In $\\triangle ABC$, vertical leg $AB = 2\\text{ units}$ and horizontal leg $AC = 3\\text{ units}$.<br>In $\\triangle DEF$, vertical leg $DE = 4\\text{ units}$ and horizontal leg $DF = 6\\text{ units}$.<br>$$\\text{Scale factor} = \\frac{4}{2} = \\frac{6}{3} = 2$$"
+                    },
+                    {
+                        q: "The $7\\text{ m}$ by $8\\text{ m}$ rectangle below is enlarged by a scale factor of $5$. What are the perimeter and the area of the new rectangle?",
+                        figure: `<div class="figure-box">
+                            <svg width="200" height="150" viewBox="0 0 200 150">
+                                <rect x="45" y="20" width="90" height="100" fill="#bae6fd" stroke="#0c4a6e" stroke-width="2.5"/>
+                                <text x="80" y="140" font-weight="bold" fill="#0c4a6e">7 m</text>
+                                <text x="145" y="75" font-weight="bold" fill="#0c4a6e">8 m</text>
+                            </svg>
+                        </div>`,
+                        a: "• New dimensions: $7 \\times 5 = 35\\text{ m}$ and $8 \\times 5 = 40\\text{ m}$.<br>• <strong>Perimeter:</strong> $$P = 2(35 + 40) = 2(75) = 150\\text{ meters}$$• <strong>Area:</strong> $$A = 35 \\times 40 = 1400\\text{ square meters}$$"
+                    },
+                    {
+                        q: "The height of a door is $1.5\\text{ meters}$. A scale drawing has a scale $1\\text{ cm} : 0.2\\text{ m}$. What is the height of the door in the scale drawing?",
+                        options: ["A. $3\\text{ cm}$", "B. $3.5\\text{ cm}$", "C. $6\\text{ cm}$", "D. $7.5\\text{ cm}$"],
+                        a: "$$\\frac{1\\text{ cm}}{0.2\\text{ m}} = \\frac{x\\text{ cm}}{1.5\\text{ m}} \\implies x = \\frac{1.5}{0.2} = 7.5\\text{ cm}$$<strong>Correct Answer: D. $7.5\\text{ cm}$</strong>"
+                    },
+                    {
+                        q: "The scale drawing of a spider enlarges the size by a scale factor of $15$. The length of a spider in the scale drawing is $9\\text{ centimeters}$. How long is the actual spider?",
+                        options: ["A. $0.6\\text{ cm}$", "B. $1.35\\text{ cm}$", "C. $1.6\\text{ cm}$", "D. $6\\text{ cm}$"],
+                        a: "$$\\text{Actual length} = \\frac{9\\text{ cm}}{15} = 0.6\\text{ cm}$$<strong>Correct Answer: A. $0.6\\text{ cm}$</strong>"
+                    },
+                    {
+                        q: "Asmah is making a scale drawing of her classroom. The classroom is $5.5\\text{ meters}$ by $7.1\\text{ meters}$. The scale drawing must fit on a $20\\text{ cm}$ by $28\\text{ cm}$ piece of paper. Can she fit a drawing with a scale of $3.5\\text{ cm} : 1\\text{ m}$? Explain your answer.",
+                        a: "• Drawing width: $5.5 \\times 3.5 = 19.25\\text{ cm}$ (which is $< 20\\text{ cm}$).<br>• Drawing length: $7.1 \\times 3.5 = 24.85\\text{ cm}$ (which is $< 28\\text{ cm}$).<br><strong>Yes, she can fit the drawing</strong> because $19.25\\text{ cm} \\times 24.85\\text{ cm}$ fits inside the $20\\text{ cm} \\times 28\\text{ cm}$ piece of paper."
+                    },
+                    {
+                        q: "A scale drawing showing the layout for a new store uses a scale factor of $0.04$. If the actual store measures $4.8\\text{ meters}$ by $6.2\\text{ meters}$, what are the dimensions of the drawing?",
+                        a: "• Drawing width: $$4.8\\text{ m} \\times 0.04 = 0.192\\text{ m} = 19.2\\text{ cm}$$• Drawing length: $$6.2\\text{ m} \\times 0.04 = 0.248\\text{ m} = 24.8\\text{ cm}$$"
+                    }
+                ]
+            }
+        ];
+
+        const appContainer = document.getElementById('app');
+        let globalQuestionCounter = 1;
+        const generateWorkspace = () => {
+            let lines = '';
+            for (let i = 0; i < 8; i++) lines += '<div class="writing-line"></div>';
+            return `<div class="student-workspace">${lines}</div>`;
+        };
+        revisionData.forEach(sectionData => {
+            const sectionHeader = document.createElement('h2');
+            sectionHeader.className = 'section-title';
+            sectionHeader.textContent = sectionData.section;
+            appContainer.appendChild(sectionHeader);
+            sectionData.questions.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                let optionsHTML = item.options && item.options.length > 0
+                    ? `<div class="options-grid">` + item.options.map(opt => `<div class="option-item">${opt}</div>`).join('') + `</div>`
+                    : '';
+                let figureHTML = item.figure ? item.figure : '';
+                card.innerHTML = `
+                    <div class="q-number">${globalQuestionCounter}</div>
+                    <div class="question-text">${item.q}</div>
+                    ${figureHTML}
+                    ${optionsHTML}
+                    ${generateWorkspace()}
+                    <button class="btn-toggle" onclick="toggleSolution(this)">Show Solution</button>
+                    <div class="solution-box">${item.a}</div>
+                `;
+                appContainer.appendChild(card);
+                globalQuestionCounter++;
+            });
+        });
+        function toggleSolution(btn) {
+            const solutionBox = btn.nextElementSibling;
+            if (solutionBox.style.display === "block") {
+                solutionBox.style.display = "none";
+                btn.textContent = "Show Solution";
+            } else {
+                solutionBox.style.display = "block";
+                btn.textContent = "Hide Solution";
+            }
+        }
+        window.addEventListener("load", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+</html>
